@@ -1,0 +1,17 @@
+@import "tailwindcss";
+:root {
+    --dynamic-primary: #DC2626;
+    --dynamic-secondary: #FB923C;
+}
+
+@theme {
+    --color-brand-red: var(--dynamic-primary);
+    --color-brand-red-dark: var(--dynamic-primary);
+    --color-brand-orange: var(--dynamic-secondary);
+    --color-brand-saffron: var(--dynamic-secondary);
+    --color-brand-black: #1A1A1A;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+}
