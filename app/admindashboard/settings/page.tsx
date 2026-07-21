@@ -7,7 +7,7 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase-browser";
 
 const DEFAULTS = {
-  site_name: "TopZone Marathi",
+  site_name: "News",
   site_description: "तुमचे विश्वासू मराठी बातम्या व्यासपीठ.",
   logo_url: "/logo.png",
   primary_color: "#DC2626",

@@ -7,7 +7,7 @@ export default function AboutPage() {
 
   const description =
     settings?.site_description ||
-    "TopZone Marathi हे महाराष्ट्रातील एक विश्वासू डिजिटल मराठी बातम्या व्यासपीठ आहे.";
+    "News हे महाराष्ट्रातील एक विश्वासू डिजिटल मराठी बातम्या व्यासपीठ आहे.";
 
   return (
     <main className="flex-1 bg-gray-50">

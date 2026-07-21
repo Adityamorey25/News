@@ -6,7 +6,7 @@ export default function HeroBanner() {
       <div className="relative w-full h-[140px] sm:h-[200px] md:h-[280px] lg:h-[340px]">
         <Image
           src="/hero-banner.png"
-          alt="TopZone Marathi"
+          alt="News"
           fill
           className="object-cover"
           priority

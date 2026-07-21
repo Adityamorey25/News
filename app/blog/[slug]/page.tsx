@@ -59,14 +59,14 @@ export async function generateMetadata({
   const blog = await getBlog(slug);
 
   if (!blog) {
-    return { title: "बातमी सापडली नाही - TopZone Marathi" };
+    return { title: "बातमी सापडली नाही - News" };
   }
 
   const description = blog.excerpt || blog.content.slice(0, 160);
   const imageUrl = blog.featured_image_url || "/logo.png";
 
   return {
-    title: `${blog.title} - TopZone Marathi`,
+    title: `${blog.title} - News`,
     description,
     openGraph: {
       title: blog.title,

@@ -30,7 +30,7 @@ export default function Footer() {
     loadCategories();
   }, []);
 
-  const siteName = settings?.site_name || "TopZone Marathi";
+  const siteName = settings?.site_name || "News";
   const logoUrl = settings?.logo_url || "/logo.png";
   const description = settings?.site_description || "तुमचे विश्वासू मराठी बातम्या व्यासपीठ.";
   const email = settings?.contact_email || "info@topzonemarathi.com";

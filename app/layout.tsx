@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TopZone Marathi - डिजिटल मराठी चॅनेल",
+  title: "News - डिजिटल मराठी चॅनेल",
   description: "Your Marathi News & Content Platform",
 };
 

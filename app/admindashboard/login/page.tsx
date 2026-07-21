@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
         <div className="flex justify-center mb-4">
           <Image
             src={settings?.logo_url || "/logo.png"}
-            alt={settings?.site_name || "TopZone Marathi"}
+            alt={settings?.site_name || "News"}
             width={64}
             height={64}
             unoptimized

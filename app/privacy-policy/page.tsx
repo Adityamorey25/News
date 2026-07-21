@@ -6,7 +6,7 @@ export default function PrivacyPolicyPage() {
           गोपनीयता धोरण
         </h1>
         <div className="bg-white rounded-lg shadow p-6 text-gray-700 leading-relaxed space-y-4">
-          <p>TopZone Marathi या वेबसाइटला भेट दिल्याबद्दल धन्यवाद. आम्ही तुमच्या गोपनीयतेचा आदर करतो.</p>
+          <p>News या वेबसाइटला भेट दिल्याबद्दल धन्यवाद. आम्ही तुमच्या गोपनीयतेचा आदर करतो.</p>
           <p>आम्ही केवळ सेवा सुधारण्यासाठी आवश्यक माहिती गोळा करतो. तुमची माहिती विकली जाणार नाही.</p>
         </div>
       </div>

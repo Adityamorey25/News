@@ -6,8 +6,8 @@ export default function TermsPage() {
           नियम व शर्ती
         </h1>
         <div className="bg-white rounded-lg shadow p-6 text-gray-700 leading-relaxed space-y-4">
-          <p>TopZone Marathi वापरण्यापूर्वी कृपया हे नियम काळजीपूर्वक वाचा.</p>
-          <p>या वेबसाइटवरील सर्व मजकूर TopZone Marathi च्या मालकीचा आहे.</p>
+          <p>News वापरण्यापूर्वी कृपया हे नियम काळजीपूर्वक वाचा.</p>
+          <p>या वेबसाइटवरील सर्व मजकूर News च्या मालकीचा आहे.</p>
         </div>
       </div>
     </main>

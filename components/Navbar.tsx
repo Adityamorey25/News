@@ -107,7 +107,7 @@ export default function Navbar() {
     document.body.appendChild(script);
   };
 
-  const siteName = settings?.site_name || "TopZone Marathi";
+  const siteName = settings?.site_name || "News";
   const logoUrl = settings?.logo_url || "/logo.png";
 
   return (
