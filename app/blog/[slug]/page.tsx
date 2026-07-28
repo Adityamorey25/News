@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase-server";
 import AdBanner from "@/components/AdBanner";
+import TickerBanner from "@/components/TickerBanner";
 import ViewCounter from "./ViewCounter";
 
 type Blog = {
@@ -219,6 +220,8 @@ export default async function BlogPostPage({
             </div>
           </div>
         )}
+
+        <TickerBanner />
       </div>
     </main>
   );
