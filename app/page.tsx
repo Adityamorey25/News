@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import BlogCard from "@/components/BlogCard";
 import AdBanner from "@/components/AdBanner";
+import TickerBanner from "@/components/TickerBanner";
 import { createClient } from "@/lib/supabase-browser";
 
 type BlogRow = {
@@ -209,6 +210,8 @@ export default function Home() {
         )}
 
         <AdBanner adType="generic" position="bottom" placeholderText="जाहिरात स्थान (Bottom Ad)" heightClass="h-24" />
+
+        <TickerBanner />
       </div>
     </main>
   );

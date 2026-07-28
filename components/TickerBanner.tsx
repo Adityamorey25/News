@@ -1,0 +1,154 @@
+"use client";
+import { useEffect, useRef, useState } from "react";
+import { createClient } from "@/lib/supabase-browser";
+
+type TickerAd = {
+  id: string;
+  title: string;
+  image_url: string | null;
+  redirect_url: string | null;
+  views_count?: number;
+  clicks_count?: number;
+};
+
+function toDateOnly(value: string | null | undefined): string | null {
+  if (!value) return null;
+  return value.slice(0, 10);
+}
+
+export default function TickerBanner() {
+  const [ad, setAd] = useState<TickerAd | null>(null);
+  const [bgColor, setBgColor] = useState<string>("#DC2626");
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const loadAd = async () => {
+      const supabase = createClient();
+      const today = new Date().toISOString().slice(0, 10);
+
+      const { data } = await supabase
+        .from("advertisements")
+        .select("id, title, image_url, redirect_url, start_date, end_date, views_count, clicks_count")
+        .eq("status", "active")
+        .eq("ad_type", "generic")
+        .eq("position", "ticker")
+        .order("priority", { ascending: false });
+
+      const candidates = (data || []).filter((a: any) => {
+        const start = toDateOnly(a.start_date);
+        const end = toDateOnly(a.end_date);
+        const startOk = !start || start <= today;
+        const endOk = !end || end >= today;
+        return startOk && endOk;
+      });
+
+      if (candidates.length > 0) {
+        const chosen = candidates[0] as TickerAd;
+        setAd(chosen);
+        await supabase
+          .from("advertisements")
+          .update({ views_count: (chosen.views_count || 0) + 1 })
+          .eq("id", chosen.id);
+      }
+    };
+    loadAd();
+  }, []);
+
+  useEffect(() => {
+    if (!ad?.image_url) return;
+
+    const img = new window.Image();
+    img.crossOrigin = "anonymous";
+    img.src = ad.image_url;
+
+    img.onload = () => {
+      try {
+        const canvas = canvasRef.current || document.createElement("canvas");
+        canvasRef.current = canvas;
+        const size = 20;
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        ctx.drawImage(img, 0, 0, size, size);
+        const data = ctx.getImageData(0, 0, size, size).data;
+
+        let r = 0,
+          g = 0,
+          b = 0,
+          count = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          r += data[i];
+          g += data[i + 1];
+          b += data[i + 2];
+          count++;
+        }
+        r = Math.round(r / count);
+        g = Math.round(g / count);
+        b = Math.round(b / count);
+        setBgColor(`rgb(${r}, ${g}, ${b})`);
+      } catch {
+        // CORS or other error — keep default color
+      }
+    };
+    img.onerror = () => {
+      // keep default color
+    };
+  }, [ad?.image_url]);
+
+  const handleClick = async () => {
+    if (!ad) return;
+    const supabase = createClient();
+    await supabase
+      .from("advertisements")
+      .update({ clicks_count: (ad.clicks_count || 0) + 1 })
+      .eq("id", ad.id);
+
+    if (ad.redirect_url && ad.redirect_url.startsWith("http")) {
+      window.open(ad.redirect_url, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  if (!ad) return null;
+
+  return (
+    <div
+      onClick={handleClick}
+      className="w-full rounded-lg overflow-hidden mb-4 cursor-pointer flex items-center h-14 transition-colors"
+      style={{ backgroundColor: bgColor }}
+    >
+      <div className="ticker-track flex items-center gap-4 whitespace-nowrap">
+        {[0, 1].map((copy) => (
+          <div key={copy} className="flex items-center gap-4 px-6">
+            {ad.image_url && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={ad.image_url}
+                alt={ad.title}
+                className="h-10 w-10 object-cover rounded"
+              />
+            )}
+            <span className="text-white font-semibold text-base drop-shadow">
+              {ad.title}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <style jsx>{`
+        .ticker-track {
+          display: flex;
+          animation: ticker-scroll 15s linear infinite;
+        }
+        @keyframes ticker-scroll {
+          0% {
+            transform: translateX(0%);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
+    </div>
+  );
+}

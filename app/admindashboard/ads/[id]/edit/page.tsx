@@ -257,6 +257,7 @@ export default function EditAdPage() {
                   <option value="sidebar1">साइडबार 1 (Sidebar) — चौकोनी, आकार: 300×250px</option>
                   <option value="sidebar2">साइडबार 2 (Sidebar 2) — चौकोनी, आकार: 300×250px</option>
                   <option value="bottom">खाली (Bottom) — लांब पट्टी, आकार: 1200×150px</option>
+                 <option value="ticker">स्क्रोलिंग पट्टी (Ticker) — फोटो आकार: 100×100px (चौकोनी आयकॉन)</option>
                 </select>
                 <p className="text-xs text-gray-400 mb-4">
                   ज्या जागेसाठी जाहिरात आहे, त्या आकाराचा फोटो अपलोड करा — तो सर्वात व्यवस्थित दिसेल.
