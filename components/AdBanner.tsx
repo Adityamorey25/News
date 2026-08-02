@@ -24,16 +24,6 @@ type AdBannerProps = {
   heightClass?: string;
 };
 
-function pickWeightedAd(ads: Ad[]): Ad {
-  const totalWeight = ads.reduce((sum, a) => sum + (a.priority || 1), 0);
-  let r = Math.random() * totalWeight;
-  for (const ad of ads) {
-    r -= ad.priority || 1;
-    if (r <= 0) return ad;
-  }
-  return ads[ads.length - 1];
-}
-
 // Both start_date/end_date might come back as full timestamps
 // (e.g. "2026-07-12 00:00:00+00") or plain dates ("2026-07-12").
 // Always compare using just the first 10 characters (YYYY-MM-DD).
@@ -41,6 +31,8 @@ function toDateOnly(value: string | null | undefined): string | null {
   if (!value) return null;
   return value.slice(0, 10);
 }
+
+const SWITCH_INTERVAL_MS = 15000;
 
 export default function AdBanner({
   adType,
@@ -50,12 +42,15 @@ export default function AdBanner({
   placeholderText,
   heightClass = "h-24",
 }: AdBannerProps) {
-  const [ad, setAd] = useState<Ad | null>(null);
+  const [ads, setAds] = useState<Ad[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
-  const viewCounted = useRef(false);
+  const viewedIds = useRef<Set<string>>(new Set());
+
+  const ad = ads[currentIndex] || null;
 
   useEffect(() => {
-    const loadAd = async () => {
+    const loadAds = async () => {
       const supabase = createClient();
       const now = new Date();
       const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
@@ -87,22 +82,32 @@ export default function AdBanner({
         candidates = candidates.filter((a: any) => a.position === position);
       }
 
-      if (candidates.length > 0) {
-        const chosen = pickWeightedAd(candidates as Ad[]);
-        setAd(chosen);
-
-        if (!viewCounted.current) {
-          viewCounted.current = true;
-          await supabase
-            .from("advertisements")
-            .update({ views_count: (chosen.views_count || 0) + 1 })
-            .eq("id", chosen.id);
-        }
-      }
+      setAds(candidates as Ad[]);
+      setCurrentIndex(0);
       setLoading(false);
     };
-    loadAd();
+    loadAds();
   }, [adType, categorySlug, blogId, position]);
+
+  // Rotate through ads every SWITCH_INTERVAL_MS
+  useEffect(() => {
+    if (ads.length <= 1) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % ads.length);
+    }, SWITCH_INTERVAL_MS);
+    return () => clearInterval(timer);
+  }, [ads.length]);
+
+  // Count a view once per ad shown
+  useEffect(() => {
+    if (!ad || viewedIds.current.has(ad.id)) return;
+    viewedIds.current.add(ad.id);
+    const supabase = createClient();
+    supabase
+      .from("advertisements")
+      .update({ views_count: (ad.views_count || 0) + 1 })
+      .eq("id", ad.id);
+  }, [ad]);
 
   const handleClick = async () => {
     if (!ad) return;
